@@ -1,3 +1,6 @@
+<?php 
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +34,12 @@
                         <a class="nav-link" href="reviews.php">Reviews</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
+                        <?php if (isset($_SESSION['userLogin'])) {
+                            echo '<a class="nav-link" href="logout.php">Logout</a>';
+                        }else{
+                            echo '<a class="nav-link" href="login.php">Login</a>';
+                        }
+                        ?>
                     </li>
                 </ul>
             </div>
