@@ -20,16 +20,16 @@
     <!-- Review Form -->
     <div class="row mt-4">
         <div class="col-md-8 offset-md-2">
-            <form id="reviewForm">
+            <form action="reviews.php" method="POST">
                 <div class="form-group">
-                    <label for="reviewerName">Your Name</label>
-                    <input type="text" class="form-control" id="reviewerName" placeholder="John Doe">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="John Doe">
                 </div>
                 <div class="form-group">
-                    <label for="reviewContent">Your Review</label>
-                    <textarea class="form-control" id="reviewContent" rows="3" placeholder="Write your review here..."></textarea>
+                    <label for="content">Your Review</label>
+                    <textarea class="form-control" id="content" rows="3" placeholder="Write your review here..."></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" name="create" id="submit_review">Submit Review</button>
+                <button type="submit" class="btn btn-primary" name="create" id="submitReview">Submit Review</button>
             </form>
         </div>
     </div>
@@ -62,21 +62,21 @@
 <?php include 'loginandregisterneeded/scriptsincluded.php'?>
 <script type="text/javascript">
     $(function(){
-        $('#submit_review').click(function(e){
+        $('#submitReview').click(function(e){
             
             var valid = this.form.checkValidity();
 
             if(valid){
 
-                var reviewerName        =   $('#reviewer_name').val();
-                var reviewContent       =   $('#review').val();
+                var name        =   $('#name').val();
+                var content       =   $('#content').val();
 
                 e.preventDefault();
 
                 $.ajax({
                     type: 'POST',
                     url: 'reviews_inserting.php',
-                    data: {reviewerName, reviewContent},
+                    data: {name: name, content: content},
 
                     success: function(data){
                         Swal.fire({
@@ -84,8 +84,18 @@
                             'text': data,
                             'icon': 'success'
                         })
-                    }
-                })
+                    },
+
+                    error: function(data){
+                        Swal.fire({
+                            'title': 'You came to error',
+                            'text': 'There were errors saving your review',
+                            'icon': 'error' 
+                        })
+                    },
+                });
+            }else{
+                
             }
         })
     })
