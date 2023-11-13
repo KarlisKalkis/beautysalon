@@ -10,6 +10,31 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
+<?php include "includes/reviews_inserting_test.php"?>
+<?php 
+if(isset($_POST["rating_data"]))
+{
+
+	$data = array(
+		':user_name'		=>	$_POST["user_name"],
+		':user_rating'		=>	$_POST["rating_data"],
+		':user_review'		=>	$_POST["user_review"],
+		':datetime'			=>	time()
+	);
+
+	$query = "
+	INSERT INTO review_table 
+	(user_name, user_rating, user_review, datetime) 
+	VALUES (:user_name, :user_rating, :user_review, :datetime)
+	";
+
+	$statement = $connect->prepare($query);
+
+	$statement->execute($data);
+
+	echo "Your Review & Rating Successfully Submitted";
+
+}?>
 <body>
     <div class="container">
     	<h1 class="mt-5 mb-5">Review & Rating System Test</h1>
@@ -151,4 +176,116 @@ $('#save_review').click(function(){
     }
 
 });
+
+$('#save_review').click(function(){
+
+var user_name = $('#user_name').val();
+
+var user_review = $('#user_review').val();
+
+if(user_name == '' || user_review == '')
+{
+    alert("Please Fill Both Field");
+    return false;
+}
+else
+{
+    $.ajax({
+        url:"includes/submit_rating.php",
+        method:"POST",
+        data:{rating_data:rating_data, user_name:user_name, user_review:user_review},
+        success:function(data)
+        {
+            $('#review_modal').modal('hide');
+
+            load_rating_data();
+
+            alert(data);
+        }
+    })
+}
+
+});
+
+load_rating_data();
+
+function load_rating_data()
+{
+$.ajax({
+    url:"submit_rating.php",
+    method:"POST",
+    data:{action:'load_data'},
+    dataType:"JSON",
+    success:function(data)
+    {
+        $('#average_rating').text(data.average_rating);
+        $('#total_review').text(data.total_review);
+
+        var count_star = 0;
+
+        $('.main_star').each(function(){
+            count_star++;
+            if(Math.ceil(data.average_rating) >= count_star)
+            {
+                $(this).addClass('text-warning');
+                $(this).addClass('star-light');
+            }
+        });
+
+
+        if(data.review_data.length > 0)
+        {
+            var html = '';
+
+            for(var count = 0; count < data.review_data.length; count++)
+            {
+                html += '<div class="row mb-3">';
+
+                html += '<div class="col-sm-1"><div class="rounded-circle bg-danger text-white pt-2 pb-2"><h3 class="text-center">'+data.review_data[count].user_name.charAt(0)+'</h3></div></div>';
+
+                html += '<div class="col-sm-11">';
+
+                html += '<div class="card">';
+
+                html += '<div class="card-header"><b>'+data.review_data[count].user_name+'</b></div>';
+
+                html += '<div class="card-body">';
+
+                for(var star = 1; star <= 5; star++)
+                {
+                    var class_name = '';
+
+                    if(data.review_data[count].rating >= star)
+                    {
+                        class_name = 'text-warning';
+                    }
+                    else
+                    {
+                        class_name = 'star-light';
+                    }
+
+                    html += '<i class="fas fa-star '+class_name+' mr-1"></i>';
+                }
+
+                html += '<br />';
+
+                html += data.review_data[count].user_review;
+
+                html += '</div>';
+
+                html += '<div class="card-footer text-right">On '+data.review_data[count].datetime+'</div>';
+
+                html += '</div>';
+
+                html += '</div>';
+
+                html += '</div>';
+            }
+
+            $('#review_content').html(html);
+        }
+    }
+})
+}
+
 </script>

@@ -23,11 +23,11 @@
             <form action="reviews.php" method="POST">
                 <div class="form-group">
                     <label for="name">Your Name</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="John Doe">
+                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="John Doe">
                 </div>
                 <div class="form-group">
                     <label for="content">Your Review</label>
-                    <textarea class="form-control" id="content" rows="3" placeholder="Write your review here..."></textarea>
+                    <textarea class="form-control" id="user_review" rows="3" placeholder="Write your review here..."></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" name="create" id="submitReview">Submit Review</button>
             </form>
@@ -44,7 +44,6 @@
         <div class="row mt-4">
         <div class="col-md-4">
             <div class="card">
-                <img src="reviewer1.jpg" class="card-img-top" alt="Reviewer 1">
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $reviews['reviewer_name'] ?></h5>
                     <p class="card-text"><?php echo $reviews['review'] ?></p>
@@ -61,42 +60,28 @@
 
 <?php include 'loginandregisterneeded/scriptsincluded.php'?>
 <script type="text/javascript">
-    $(function(){
-        $('#submitReview').click(function(e){
-            
-            var valid = this.form.checkValidity();
+    $('#save_review').click(function(){
 
-            if(valid){
+        var user_name = $('#user_name').val();
 
-                var name        =   $('#name').val();
-                var content       =   $('#content').val();
+        var user_review = $('#user_review').val();
 
-                e.preventDefault();
+        if(user_name == '' || user_review == '')
+        {
+            alert("Please Fill Both Field");
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                url:"submit_rating.php",
+                method:"POST",
+                data:{rating_data:rating_data, user_name:user_name, user_review:user_review},
+                success:function(data)
+                {
+                    $('#review_modal').modal('hide');
 
-                $.ajax({
-                    type: 'POST',
-                    url: 'reviews_inserting.php',
-                    data: {name: name, content: content},
+                    load_rating_data();
 
-                    success: function(data){
-                        Swal.fire({
-                            'title': 'Your review is saved',
-                            'text': data,
-                            'icon': 'success'
-                        })
-                    },
-
-                    error: function(data){
-                        Swal.fire({
-                            'title': 'You came to error',
-                            'text': 'There were errors saving your review',
-                            'icon': 'error' 
-                        })
-                    },
-                });
-            }else{
-                
-            }
-        })
-    })
+                    alert(data);
     </script>
