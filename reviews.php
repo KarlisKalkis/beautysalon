@@ -36,13 +36,14 @@
 
     
     <!-- Existing Reviews -->
-    <div class="row mt-4">
+    <div class="row mt-4 ">
         <!-- Display existing reviews here (you can use the same card structure as before) -->
         <div class="container">
     <h1 class="mt-5 text-center">Customer Reviews</h1>
     <?php foreach ($reviews as $reviews): ?>
         <div class="row mt-4">
-        <div class="col-md-4">
+            
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><?php echo $reviews['reviewer_name'] ?></h5>
@@ -53,35 +54,43 @@
         
         
     </div>
+
     <?php endforeach ?>
-</div>
+        </div>
     </div>
 </div>
 
 <?php include 'loginandregisterneeded/scriptsincluded.php'?>
-<script type="text/javascript">
-    $('#save_review').click(function(){
+<script>
+$(document).ready(function() {
+    $('#submitReview').click(function(event) {
+        event.preventDefault();
 
         var user_name = $('#user_name').val();
-
         var user_review = $('#user_review').val();
 
-        if(user_name == '' || user_review == '')
-        {
-            alert("Please Fill Both Field");
+        if (user_name === '' || user_review === '') {
+            alert("Please fill in both fields.");
             return false;
-        }
-        else
-        {
+        } else {
             $.ajax({
-                url:"submit_rating.php",
-                method:"POST",
-                data:{rating_data:rating_data, user_name:user_name, user_review:user_review},
-                success:function(data)
-                {
-                    $('#review_modal').modal('hide');
-
-                    load_rating_data();
-
-                    alert(data);
-    </script>
+                url: "submit_rating.php",
+                method: "POST",
+                data: {
+                    user_name: user_name,
+                    user_review: user_review
+                },
+                success: function(data) {
+                    // Handling success, possibly updating the UI with new review
+                    alert(data); // Display a success message or handle it appropriately
+                },
+                error: function(xhr, status, error) {
+                    // Handling errors, if any
+                    console.error(xhr.responseText);
+                    alert('An error occurred while submitting the review.');
+                }
+            });
+        }
+    });
+});
+</script>
