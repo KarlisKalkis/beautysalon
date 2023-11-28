@@ -1,9 +1,23 @@
 <?php 
 @include 'config.php';
 session_start();
+$_SESSION['user_role'] = 'admin';
 
 if (!isset($_SESSION['admin_name'])){
     header('location:login_form.php');
+}
+
+// Check if the admin is logged in
+if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])){
+    header('location:login_form.php');
+    exit(); // Stop further execution to prevent displaying the admin page content
+}
+
+// Check if the user has admin privileges
+if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
+    // Redirect to another page or display an error message
+    header('location:access_denied.php');
+    exit(); // Stop further execution to prevent displaying the admin page content
 }
 ?>
 
