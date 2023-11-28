@@ -1,9 +1,42 @@
-<?php  
-
+<?php
+include 'config/config.php';
 session_start();
-if(isset($_SESSION['userLogin'])){
-    header("Location: index.php");
-} ?>
+
+if (isset($_POST['submit'])) {
+    $email = $_POST['email'];
+    $password = ($_POST['password']);
+
+    $select = "SELECT * FROM users WHERE email = '$email' && password='$password'";
+    $result = $db->query($select);
+
+    var_dump($result);
+
+    if ($result) {
+        if ($result->rowCount() > 0) {
+            $row = $result->fetch();
+            $user_type = $row['type'];
+
+            if ($user_type == 'admin') {
+                $_SESSION['admin_name'] = $row['email'];
+                header('Location: admin_page.php');
+                exit();
+            } elseif ($user_type == 'user') {
+                $_SESSION['user_name'] = $row['email'];
+                header('Location: index.php');
+                exit();
+            } else {
+                $error[] = 'Incorrect email or password';
+            }
+        } else {
+            $error[] = 'No rows found for the given credentials';
+        }
+    } else {
+        // Log the SQL error for debugging
+        error_log("SQL Error: " . $db->error);
+        $error[] = 'Database query error. Please try again later.';
+    }
+}
+?>
 
 <?php include 'includeformainpages/header.php' ?>
 
@@ -22,7 +55,7 @@ if(isset($_SESSION['userLogin'])){
                         <div class="col-md-6 col-lg-6 d-flex align-items-center">
                             <div class="card-body p-4 p-lg-5 text-black">
 
-                                <form>
+                                <form action="" method="POST">
 
                                     <div class="d-flex align-items-center mb-3 pb-1">
                                         <span class="h1 fw-bold mb-0">Danielas Beauty</span>
@@ -48,14 +81,14 @@ if(isset($_SESSION['userLogin'])){
                                     </div>
 
                                     <div class="pt-1 mb-4">
-                                        <button class="btn btn-dark btn-lg btn-block" name="loginbuttton" id="login" type="button">Login</button>
+                                        <button class="btn btn-dark btn-lg btn-block" name="submit" id="login" type="submit">Login</button>
                                     </div>
 
 
                                     <a class="small text-muted" href="index.html">Back to home page</a>
                                     <br>
                                     <a class="small text-muted" href="#!">Forgot password?</a>
-                                    <p class="pb-lg-5" style="color: #393f81;">Don't have an account? <a href="user_register.php" style="color: #393f81;">Register here</a></p>
+                                    <p class="pb-lg-5" style="color: #393f81;">Don't have an account? <a href="register.php" style="color: #393f81;">Register here</a></p>
 
 
                                 </form>
@@ -73,36 +106,7 @@ if(isset($_SESSION['userLogin'])){
 <!--Includes scripts that are needed-->
 <?php include 'loginandregisterneeded/scriptsincluded.php' ?>
 
-<script>
-    $(function(){
-        $('#login').click(function(e){
-        
-            var valid = this.form.checkValidity();
-            
-            if(valid){
-                var email       = $('#email').val();
-                var password    = $('#password').val();
-            }
 
-            e.preventDefault();
-
-            $.ajax({
-                type: 'POST',
-                url: 'loginprocess.php',
-                data: {email: email, password: password},
-                success: function(data){
-                    alert(data);
-                    if($.trim(data) === "Welcome back! We are glad to see you back"){
-                        setTimeout(' document.location.href = "index.php"', 10);
-                    }
-                },
-                error: function(data){
-                    alert('error');
-                }
-            });
-        });
-    });
-</script>
 </body>
 
 </html>

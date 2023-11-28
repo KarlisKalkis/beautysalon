@@ -10,6 +10,7 @@ if (isset($_POST)) {
     $lastname       = $_POST['lastname'];
     $phonenumber    = $_POST['phonenumber'];
     $password       = $_POST['password'];
+    
 
    $sql = "INSERT INTO users (email, firstname, lastname, phonenumber, password ) VAlUES(?,?,?,?,?)";
    $stmtinsert = $db->prepare($sql);

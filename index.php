@@ -1,3 +1,8 @@
+<?php
+
+
+?>
+
 <?php include 'includeformainpages/header.php'?>
 
 <body>
