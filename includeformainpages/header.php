@@ -41,6 +41,15 @@
                         }
                         ?>
                     </li>
+                    <li class="nav-item">
+                        <?php
+                        
+                         if (isset($_SESSION['user_name'])) {
+                            echo '<a class="nav-link" href="user_profile.php">Your profile</a>';
+                         }
+                        ?>
+                    </li>
+                    
                     
                 </ul>
             </div>
