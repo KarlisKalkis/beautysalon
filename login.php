@@ -9,7 +9,6 @@ if (isset($_POST['submit'])) {
     $select = "SELECT * FROM users WHERE email = '$email' && password='$password'";
     $result = $db->query($select);
 
-    var_dump($result);
 
     if ($result) {
         if ($result->rowCount() > 0) {

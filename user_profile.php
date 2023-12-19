@@ -23,8 +23,8 @@ if ($result && $result->rowCount() > 0) {
 
     // Display user profile information test to show that it works
 
-    //echo "<h2>Welcome, " . $userData['firstname'] . "!</h2>";
-    //echo "<p>Email: " . $userData['email'] . "</p>";
+    echo "<h2>Welcome, " . $userData['firstname'] . "!</h2>";
+    echo "<p>Email: " . $userData['email'] . "</p>";
     // Display other profile information as needed
 } else {
     echo "User profile data not found.";

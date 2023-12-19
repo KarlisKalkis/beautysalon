@@ -1,5 +1,6 @@
 <?php
-@include 'config.php';
+include 'config/config.php';
+include 'config/reviewsgetting.php';
 session_start();
 $_SESSION['user_role'] = 'admin';
 
@@ -18,6 +19,19 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
     // Redirect to another page or display an error message
     header('location:access_denied.php');
     exit(); // Stop further execution to prevent displaying the admin page content
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_review'])) {
+    $review_id = $_POST['review_id']; // Assuming review_id is passed through a hidden input field
+
+    // Perform deletion from the database based on review_id
+
+    $delete_query = "DELETE FROM reviews WHERE review_id = $review_id";
+    
+    $result = $db->exec($delete_query);
+    
+
 }
 ?>
 
@@ -63,12 +77,30 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
         </div>
     </nav>
 
-<body>
-    <div class="container">
-        <h1>Admin page </h1>
-    </div>
+<div class="row mt-4 ">
+            <!-- Display existing reviews here (you can use the same card structure as before) -->
+            <div class="container">
+                <h1 class="mt-5 text-center">Customer Reviews</h1>
+                <?php foreach ($reviews as $reviews) : ?>
+                    <div class="row mt-4">
 
-    <div class="container">
-        <a href="procedures_adding.php">Procedure control</a>
-        <a href="reviews_control.php">Reviews control</a>
-    </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?php echo $reviews['reviewer_name'] ?></h5>
+                                    <p class="card-text"><?php echo $reviews['review'] ?></p>
+                                    <!--FORM TO do actions with reviews-->
+                                    <form action="" method="POST">
+                                        <input type="hidden" name="review_id" value="<?php echo $review['review_id']?>">
+                                        <button type="submit" name="delete_review" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                <?php endforeach ?>
+            </div>
+        </div>
