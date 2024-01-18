@@ -22,17 +22,8 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_review'])) {
-    $review_id = $_POST['review_id']; // Assuming review_id is passed through a hidden input field
 
-    // Perform deletion from the database based on review_id
 
-    $delete_query = "DELETE FROM reviews WHERE review_id = $review_id";
-    
-    $result = $db->exec($delete_query);
-    
-
-}
 ?>
 
 
@@ -77,8 +68,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_review'])) {
         </div>
     </nav>
 
+
+    <!--Displaying pending reviews-->
+    
+
+
+    
 <div class="row mt-4 ">
-            <!-- Display existing reviews here (you can use the same card structure as before) -->
+            <!-- Display approved reviews here (you can use the same card structure as before) -->
             <div class="container">
                 <h1 class="mt-5 text-center">Customer Reviews</h1>
                 <?php foreach ($reviews as $reviews) : ?>

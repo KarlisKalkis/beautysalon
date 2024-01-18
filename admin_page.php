@@ -51,7 +51,7 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
                         <a class="nav-link" href="products.php">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="reviews.php">Reviews</a>
+                        <a class="nav-link" href="reviews_control.php">Reviews</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Logout</a>

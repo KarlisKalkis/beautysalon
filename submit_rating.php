@@ -12,11 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_review = $_POST['user_review'];
 
         //code to push reviews to database
-        $query = "INSERT INTO reviews(reviewer_name, review) VALUES (:user_name, :user_review)";
+        $query = "INSERT INTO reviews(reviewer_name, review, approved) VALUES (:user_name, :user_review, 0)";
 
         $statement = $connect->prepare($query);
         $statement->bindParam(':user_name', $user_name);
         $statement->bindParam(':user_review', $user_review);
+ 
 
         try {
             $statement->execute();
