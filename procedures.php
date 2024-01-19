@@ -1,3 +1,7 @@
+<?php
+session_start();
+$_SESSION['user_role'] = 'user';
+?>
 <?php include 'includeformainpages/header.php'?>
 <?php include 'config/config.php'?>
 
@@ -26,7 +30,7 @@ if ($stmtselect->execute()) {
                 <h5 class="card-title"><?php echo $procedures['name'] ?></h5>
                 <p class="card-text"><?php echo $procedures['info'] ?></p>
                 <p class="card-text text-danger"><?php echo $procedures['price'] ?> EIRO</p>
-                <a href="#" class="btn btn-primary">Add to Cart</a>
+                <a href="reservation.php?Procedure_ID=<?php echo $procedures['Procedure_ID']?>" class="btn btn-primary">Add to Cart</a>
             </div>
         </div>
 
