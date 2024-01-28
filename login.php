@@ -7,8 +7,12 @@ if (isset($_POST['submit'])) {
     $password = ($_POST['password']);
 
     $select = "SELECT * FROM users WHERE email = '$email' && password='$password'";
+    
     $result = $db->query($select);
 
+    
+
+    
 
     if ($result) {
         if ($result->rowCount() > 0) {
