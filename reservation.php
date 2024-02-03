@@ -1,11 +1,10 @@
 <?php
 session_start();
-$_SESSION['user_role'] = 'user';
-?>
-<?php include 'includeformainpages/header.php'?>
-<?php include 'config/config.php'?>
 
-<?php 
+include 'config/config.php';
+include 'includeformainpages/header.php';
+
+// Check if the user is logged in as a user
 if (isset($_SESSION['user_name'])){
     $loggedInUserEmail = $_SESSION['user_name'];
     
@@ -30,69 +29,86 @@ if (isset($_GET['Procedure_ID'])){
     }
 }
 
-//code to push reservation to database
-try{
-    if ($_SERVER["REQUEST_METHOD"] == "POST"){
-        $selectedTime = $_POST["procedureTime"];
 
-        $user_id = $userData['user_id'];
 
-        //data inserting
-        $stmt = $db->prepare("INSERT INTO orders (Time, user_id) Values (:selectedTime, '$user_id')");
-        $stmt->bindParam(':selectedTime', $selectedTime);
 
-        if ($stmt->execute()) {
-            echo "<div class='alert alert-success mt-3'>Procedure scheduled for: $selectedTime</div>";
-        } else {
-            echo "<div class='alert alert-danger mt-3'>Error: Unable to insert data</div>";
-        }
+
+if (isset($_GET['Procedure_ID'])) {
+    $procedureId = $_GET['Procedure_ID'];
+
+    // Fetch procedure details and available times based on Procedure_ID
+    $sql = "
+    SELECT p.*, rt.start_time
+    FROM procedures p
+    LEFT JOIN reservation_times rt ON p.Procedure_ID = rt.procedure_id
+    WHERE p.Procedure_ID = :procedureId
+    ";
+    $stmtselect = $db->prepare($sql);
+    $stmtselect->bindParam(':procedureId', $procedureId, PDO::PARAM_INT);
+
+    if ($stmtselect->execute()) {
+        $procedure = $stmtselect->fetch(PDO::FETCH_ASSOC);
+
+        // Now you have the details of the selected procedure in the $procedure variable
+        // You can use this information to display the reservation details or process the reservation
+    } else {
+        echo 'There were errors fetching procedure data';
     }
-}catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-} finally {
-    // Close the database connection
-    $conn = null;
+} else {
+    // Redirect to the page where procedure selection is done if Procedure_ID is not provided
+    header('Location: procedures.php');
+    exit();
 }
+
+
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Procedure Time Selection</title>
-</head>
-<body>
 
-  <div class="container">
-    <h1 class="mt-5">Select Procedure Time</h1>
 
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      // Process the form data (you can replace this with your logic)
-      $selectedTime = $_POST["procedureTime"];
-      echo "<div class='alert alert-success mt-3'>Procedure scheduled for: $selectedTime</div>";
-    }
-    ?>
+<!-- HTML RESERVATION DETAILS -->
+<div class="container mt-1 pt-5">
+    <div class="row d-flex">
+        <div class="col-md-12 text-center">
+            <h2 class="navbar-brand">Reservation Details</h2>
+        </div>
+    </div>
+</div>
 
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-      <div class="form-group">
-        <label for="procedureTime" class="form-label">Select Time:</label>
-        <select class="form-select" id="procedureTime" name="procedureTime" required>
-          <option value="" selected disabled>Select a time</option>
-          <option value="09:00:00">09:00 AM</option>
-          <option value="10:00 AM">10:00 AM</option>
-          <option value="11:00 AM">11:00 AM</option>
-          <!-- Add more options as needed -->
-        </select>
-      </div>
+<div class="row pt-5 p-4">
+    <div class="col-md-6 pb-2 d-flex ml-4 p-3">
+        <!-- Display reservation details based on $procedure variable -->
+        <div class="card col-sm-10 ml-4 p-3" style="max-width: 300px;">
+            <!-- Display procedure information -->
+            <h5 class="card-title"><?php echo $procedure['name'] ?></h5>
+            <p class="card-text"><?php echo $procedure['info'] ?></p>
+            <p class="card-text text-danger"><?php echo $procedure['price'] ?> EIRO</p>
+        </div>
+    </div>
 
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
+    <div class="col-md-6 pb-2 d-flex ml-4 p-3">
+        <!-- Display reservation times -->
+        <p class="card-text">Reservation Times: <?php echo $procedure['start_time']; ?></p>
 
-  <!-- Bootstrap JS (optional, if you need some Bootstrap features) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        <!-- Additional reservation form or details can be added here -->
+
+        <!-- Time Picker for choosing reservation time -->
+        <form action="process_reservation.php" method="post">
+            <div class="form-group">
+                <label for="reservationTime">Choose Reservation Time:</label>
+                <input type="time" class="form-control" id="reservationTime" name="reservationTime" required>
+            </div>
+            <!-- Hidden input for passing information about procedure and passing user_id -->
+            <input type="hidden" name="Procedure_ID" value="<?php echo $procedure['Procedure_ID']; ?>">
+            <input type="hidden" name="price" value="<?php echo $procedure['price']; ?>">
+            <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+            <button type="submit" class="btn btn-primary">Reserve</button>
+        </form>
+    </div>
+</div>
+
+
+<?php
+// Include Bootstrap JS and jQuery
+
+?>

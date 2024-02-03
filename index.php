@@ -2,7 +2,7 @@
 session_start();
 $_SESSION['user_role'] = 'user';
 
-
+var_dump($_SESSION);
 ?>
 
 <?php include 'includeformainpages/header.php'?>

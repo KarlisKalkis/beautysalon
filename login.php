@@ -5,14 +5,12 @@ session_start();
 if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = ($_POST['password']);
+    $user_id = ($_POST['user_id']);
 
     $select = "SELECT * FROM users WHERE email = '$email' && password='$password'";
     
     $result = $db->query($select);
 
-    
-
-    
 
     if ($result) {
         if ($result->rowCount() > 0) {
@@ -25,6 +23,7 @@ if (isset($_POST['submit'])) {
                 exit();
             } elseif ($user_type == 'user') {
                 $_SESSION['user_name'] = $row['email'];
+                $_SESSION['user_id'] = $row['user_id'];
                 header('Location: index.php');
                 exit();
             } else {

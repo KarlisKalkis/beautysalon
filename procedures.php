@@ -25,12 +25,16 @@ if ($stmtselect->execute()) {
 <?php foreach ($procedures as $procedures) : ?>
 <div class="col-md-6 pb-2 d-flex ml-4 p-3">
         <div class="card col-sm-10 ml-4 p-3" style="max-width: 300px;">
-            <img src="<?php echo $procedures['pictureLink'] ?>" class="card-img-top" alt="Beauty procedure">
             <div class="card-body">
                 <h5 class="card-title"><?php echo $procedures['name'] ?></h5>
                 <p class="card-text"><?php echo $procedures['info'] ?></p>
                 <p class="card-text text-danger"><?php echo $procedures['price'] ?> EIRO</p>
-                <a href="reservation.php?Procedure_ID=<?php echo $procedures['Procedure_ID']?>" class="btn btn-primary">Add to Cart</a>
+                
+                <!-- Hidden input for inserting procedure id -->
+                <form action="reservation.php" method="get">
+                    <input type="hidden" name="Procedure_ID" value="<?php echo $procedures['Procedure_ID']; ?>">
+                    <input type="submit" class="btn btn-primary" value="Reserve"> 
+                </form>
             </div>
         </div>
 

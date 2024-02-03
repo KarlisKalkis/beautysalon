@@ -3,10 +3,6 @@ require_once('config/config.php');
 ?>
 
 <?php include 'includeformainpages/header.php'?>
-
-
-
-
     <section class="mh-100" style="background-color: #82216f;">
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
