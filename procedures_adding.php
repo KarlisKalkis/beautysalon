@@ -53,6 +53,25 @@ if ($stmtselect->execute()) {
 } ?>
 
 
+<!--Codes for operations with procedure control-->  
+
+<!--Deleting procedure-->
+<?php if(isset($_GET['delete_procedure'])){
+    //get procedure id
+    $procedure_id = $_POST['Procedure_ID'];
+
+    //Prepare sql statement to get ready for deletion
+    $sql = "DELETE FROM procedures where Procedure_ID = ? ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$procedure_id]);
+
+    header("Location: ".$_SERVER['PHP_SELF']);
+    exit();
+}
+
+    ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,7 +101,7 @@ if ($stmtselect->execute()) {
                     <a class="nav-link" href="products.php">Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="reviews.php">Reviews</a>
+                    <a class="nav-link" href="reviews_control.php">Reviews</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="logout.php">Logout</a>
@@ -116,45 +135,29 @@ if ($stmtselect->execute()) {
 
 <div class="container mt-5">
     <h2>Existing procedures in system</h2>
-</div>
-<div class="container">
-            <div class="row">
-                <div class="col m-auto">
-                    <div class="card mt-5">
-                        <table class="table table-bordered">
-                            <tr>
-                                <td> User ID </td>
-                                <td> User Name </td>
-                                <td> User Email </td>
-                                <td> User Age </td>
-                                <td> Edit  </td>
-                                <td> Delete </td>
-                            </tr>
+    <div class="container mt-5">
+        <div class='row pt-5 p-4'>
+            <?php foreach ($procedures as $procedures) : ?>
+                <div class="col-md-6 pb-2 d-flex ml-4 p-3">
+                    <div class="card col-sm-10 ml-4 p-3" style="max-width: 300px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $procedures['name'] ?></h5>
+                            <p class="card-text"><?php echo $procedures['info'] ?></p>
+                            <p class="card-text text-danger"><?php echo $procedures['price'] ?> EIRO</p>
 
-                            <?php 
-                                    
-                                    while($stmtselect)
-                                    {
-                                        $UserID = $row['User_ID'];
-                                        $UserName = $row['User_Name'];
-                                        $UserEmail = $row['User_Email'];
-                                        $UserAge = $row['User_Age'];
-                            ?>
-                                    <tr>
-                                        <td><?php echo $UserID ?></td>
-                                        <td><?php echo $UserName ?></td>
-                                        <td><?php echo $UserEmail ?></td>
-                                        <td><?php echo $UserAge ?></td>
-                                        <td><a href="#" class="btn btn-pencil">Edit</a></td>
-                                        <td><a href="#" class="btn btn-danger">Delete</a></td>
-                                    </tr>        
-                            <?php 
-                                    }  
-                            ?>                                                                    
-                                   
-
-                        </table>
+                            <!-- Hidden input for getting procedure id -->
+                            <form method="POST">
+                                <input type="hidden" name="Procedure_ID" value="<?php $procedures['Procedure_ID']; ?>">
+                                <button type="submit" class="btn btn-danger" name="delete_procedure">Delete</button>
+                            </form>
+                        </div>
                     </div>
+
+
                 </div>
-            </div>
+            <?php endforeach ?>
         </div>
+    </div>
+</div>
+
+

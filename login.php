@@ -26,7 +26,10 @@ if (isset($_POST['submit'])) {
                 $_SESSION['user_id'] = $row['user_id'];
                 header('Location: index.php');
                 exit();
-            } else {
+            } elseif($user_type == 'worker'){
+                $_SESSION['worker_name'] = $row['email'];
+                header('Location: workerindex.php');
+            }else {
                 $error[] = 'Incorrect email or password';
             }
         } else {
