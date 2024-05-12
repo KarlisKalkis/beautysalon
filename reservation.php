@@ -38,7 +38,7 @@ if (isset($_GET['Procedure_ID'])) {
 
     // Fetch procedure details and available times based on Procedure_ID
     $sql = "
-    SELECT p.*, rt.start_time
+    SELECT p.*
     FROM procedures p
     LEFT JOIN reservation_times rt ON p.Procedure_ID = rt.procedure_id
     WHERE p.Procedure_ID = :procedureId
@@ -88,7 +88,6 @@ if (isset($_GET['Procedure_ID'])) {
 
     <div class="col-md-6 pb-2 d-flex ml-4 p-3">
         <!-- Display reservation times -->
-        <p class="card-text">Reservation Times: <?php echo $procedure['start_time']; ?></p>
 
         <!-- Additional reservation form or details can be added here -->
 
