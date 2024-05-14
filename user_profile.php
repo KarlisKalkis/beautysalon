@@ -1,5 +1,3 @@
-
-
 <?php
 session_start();
 $_SESSION['user_role'] = 'user';
@@ -9,6 +7,7 @@ include 'includeformainpages/header.php';
 
 if (isset($_SESSION['user_name'])) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        
         // Process form submission and update database
         $userID = $_SESSION['user_id'];
         $firstname = $_POST['firstname'];
@@ -25,6 +24,8 @@ if (isset($_SESSION['user_name'])) {
         header('Location: user_profile.php');
         exit();
     }
+
+    
 
     // Fetch user data from the database
     $loggedInUserEmail = $_SESSION['user_name'];
@@ -109,39 +110,4 @@ if (isset($_SESSION['user_name'])) {
     </div>
 </div>
 
-<?php foreach ($usersReservations as $reservation) : ?>
-    <section style="background-color: #eee;">
-        <div class="container py-3">
-            <div class="row justify-content-left mb-3">
-                <div class="col-md-6">
-                    <div class="card shadow-0 border rounded-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12 col-lg-3 col-xl-6 mb-2 mb-lg-0">
-                                    <h4><?php echo $reservation['name']?></h4>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-6 col-xl-6">
-                                <div class="col-md-12 col-lg-12 col-xl-12">
-                                    <div class="mb-2 text-muted small">
-                                        Procedure placed: <?php echo $reservation['Date'] ?>
-                                    </div>
-                                    <div class="mb-2 text-muted small">
-                                        Your reservation time : <?php echo $reservation['Time'] ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-3 col-xl-6 ms-3 border-sm-start-none border-start">
-                                <div class="d-flex flex-row align-items-center mb-1">
-                                    <h4 class="mb-1 me-1"><?php echo $reservation['price']?> EIRO</h4>
-                                </div>
-                                <div class="d-flex flex-column mt-4">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-<?php endforeach ?>
+

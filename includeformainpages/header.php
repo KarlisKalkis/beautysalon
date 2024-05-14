@@ -35,6 +35,16 @@
                         <?php
                         
                          if (isset($_SESSION['user_name'])) {
+                            echo '<a class="nav-link" href="user_reservation.php">Your reservation</a>';
+                        }else{
+                            echo '<a class="nav-link" href="login.php">Login</a>';
+                        }
+                        ?>
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                        
+                         if (isset($_SESSION['user_name'])) {
                             echo '<a class="nav-link" href="logout.php">Logout</a>';
                         }else{
                             echo '<a class="nav-link" href="login.php">Login</a>';
