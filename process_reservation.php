@@ -41,35 +41,54 @@ if (isset($_SESSION['user_id'])){
     exit();
 }
 
-// The rest of your reservation processing code goes here...
-
+//i
 // Validate the form data
-$reservationTime = $_POST['reservationTime'];
-$procedureID = $_POST['Procedure_ID'];
-$price = $_POST['price'];
-$userID = $_POST['user_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $reservationTime = $_POST['reservationTime'];
+    $procedureID = $_POST['Procedure_ID'];
+    $price = $_POST['price'];
+    $userID = $_POST['user_id'];
+    $reservationDate = $_POST['reservationDate'];
 
-// Validate and sanitize the inputs if needed
+    // Validate and sanitize the inputs if needed
 
-// Insert reservation data into the database
-$insertReservation = "
-INSERT INTO orders (Procedure_ID, Time, price, user_id)
-VALUES (:Procedure_ID, :Time, :price, :user_id)
-";
-$stmtInsertReservation = $db->prepare($insertReservation);
-$stmtInsertReservation->bindParam(':Procedure_ID', $procedureID, PDO::PARAM_INT);
-$stmtInsertReservation->bindParam(':Time', $reservationTime, PDO::PARAM_STR);
-$stmtInsertReservation->bindParam(':price', $price, PDO::PARAM_STR);
-$stmtInsertReservation->bindParam(':user_id', $userID, PDO::PARAM_INT);
+    try {
+        // Begin a transaction
+        $db->beginTransaction();
 
-if ($stmtInsertReservation->execute()) {
-    // Reservation successful, you can redirect or display a success message
-    header('Location: reservation_success.php');
-    exit();
-} else {
-    // Reservation failed, you can redirect or display an error message
-    echo 'Reservation failed';
-    var_dump($_SESSION);
+        // Delete the selected time from procedure_times
+        $deleteSQL = "
+        DELETE FROM procedure_times 
+        WHERE procedure_id = :procedureID AND time = :reservationTime AND date = :reservationDate";
+        $stmtDelete = $db->prepare($deleteSQL);
+        $stmtDelete->bindParam(':procedureID', $procedureID, PDO::PARAM_INT);
+        $stmtDelete->bindParam(':reservationTime', $reservationTime, PDO::PARAM_STR);
+        $stmtDelete->bindParam(':reservationDate', $reservationDate, PDO::PARAM_STR);
+        $stmtDelete->execute();
+
+        // Insert reservation data into the database
+        $insertReservation = "
+        INSERT INTO orders (Procedure_ID, Time, price, user_id, Date)
+        VALUES (:Procedure_ID, :Time, :price, :user_id, :date)
+        ";
+        $stmtInsertReservation = $db->prepare($insertReservation);
+        $stmtInsertReservation->bindParam(':Procedure_ID', $procedureID, PDO::PARAM_INT);
+        $stmtInsertReservation->bindParam(':Time', $reservationTime, PDO::PARAM_STR);
+        $stmtInsertReservation->bindParam(':price', $price, PDO::PARAM_STR);
+        $stmtInsertReservation->bindParam(':user_id', $userID, PDO::PARAM_INT);
+        $stmtInsertReservation->bindParam(':date', $reservationDate, PDO::PARAM_STR);
+        $stmtInsertReservation->execute();
+
+        // Commit the transaction
+        $db->commit();
+
+        // Reservation successful, you can redirect or display a success message
+        header('Location: reservation_success.php');
+        exit();
+    } catch (Exception $e) {
+        // Roll back the transaction if something failed
+        $db->rollBack();
+        echo "Failed to create reservation: " . $e->getMessage();
+    }
 }
 ?>
-

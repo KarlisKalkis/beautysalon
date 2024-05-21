@@ -38,7 +38,7 @@ if (isset($_GET['Procedure_ID'])) {
 
     // Fetch procedure details and available times based on Procedure_ID
     $sql = "
-    SELECT p.*, pt.time
+    SELECT p.*, pt.time, pt.date
     FROM procedures p
     LEFT JOIN procedure_times pt ON p.Procedure_ID = pt.procedure_id
     WHERE p.Procedure_ID = :procedureId
@@ -69,6 +69,25 @@ if (isset($_GET['Procedure_ID'])) {
 }
 
 
+if($_SERVER['REQUEST_METHOD'] === "POST"){
+    $reservationTime = $_POST['$reservationTime'];
+    $price = $_POST['price'];
+    $userID = $_POST['user_id'];
+    $reservationDate = $_POST['reservationDate'];
+
+    //transaction to delete from available times to orders table in database
+    $db ->beginTransaction();
+
+    //deleting from reservationtimes table
+    $deleteSQL = "DELETE FROM procedure_times where procedure_id = :procedureID AND time = :reservationTime and date = :reservationDate";
+    $stmtDelete = $db -> prepare($deleteSQL);
+    $stmtDelete->bindParam(':procedure_id', $procedureId, PDO::PARAM_INT);
+    $stmtDelete->bindParam(':reservationTime', $reservationTime, PDO::PARAM_STR);
+    $stmtDelete->bindParam(':reservationDate', $reservationDate, PDO::PARAM_STR);
+    $stmtDelete ->execute();
+
+}
+
 
 ?>
 
@@ -88,7 +107,7 @@ if (isset($_GET['Procedure_ID'])) {
         <!-- Display reservation details based on $procedure variable -->
         <div class="card col-sm-10 ml-4 p-3" style="max-width: 300px;">
             <!-- Display procedure information -->
-            <h5 class="card-title"><?php echo $procedure['name'] ?></h5>
+            <h5 class="card-title"><?php echo $procedure['name']?></h5>
             <p class="card-text"><?php echo $procedure['info'] ?></p>
             <p class="card-text text-danger"><?php echo $procedure['price'] ?> EIRO</p>
         </div>
@@ -108,7 +127,7 @@ if (isset($_GET['Procedure_ID'])) {
                 <select class="form-control" id="reservationTime" name="reservationTime" required>
                     <?php foreach ($availableTimes as $time): ?>
                         <option value="<?php echo $time['time']; ?>">
-                            <?php echo $time['time']; ?>
+                            <?php echo $time['time'];echo('  '); echo $time['date'];?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -118,6 +137,7 @@ if (isset($_GET['Procedure_ID'])) {
             <input type="hidden" name="Procedure_ID" value="<?php echo $procedure['Procedure_ID']; ?>">
             <input type="hidden" name="price" value="<?php echo $procedure['price']; ?>">
             <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+            <input type="hidden" name="reservationDate" value="<?php echo $time['date']; ?>">
             <button type="submit" class="btn btn-primary">Reserve</button>
         </form>
     </div>
