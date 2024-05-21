@@ -37,8 +37,16 @@
                          if (isset($_SESSION['user_name'])) {
                             echo '<a class="nav-link" href="user_reservation.php">Your reservation</a>';
                         }else{
-                            echo '<a class="nav-link" href="login.php">Login</a>';
+                            echo ' ';
                         }
+                        ?>
+                    </li>
+                    <li class="nav-item">
+                        <?php
+                        
+                         if (isset($_SESSION['user_name'])) {
+                            echo '<a class="nav-link" href="user_profile.php">Your profile</a>';
+                         }
                         ?>
                     </li>
                     <li class="nav-item">
@@ -51,14 +59,7 @@
                         }
                         ?>
                     </li>
-                    <li class="nav-item">
-                        <?php
-                        
-                         if (isset($_SESSION['user_name'])) {
-                            echo '<a class="nav-link" href="user_profile.php">Your profile</a>';
-                         }
-                        ?>
-                    </li>
+                    
                     
                     
                 </ul>

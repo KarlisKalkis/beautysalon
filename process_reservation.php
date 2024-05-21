@@ -18,7 +18,7 @@ if ($result && $result->rowCount() > 0) {
     echo "User profile data not found.";
 }
 
-// Check if the user ID is present in the session
+// validation to get if user is signed in session
 if (isset($_SESSION['user_id'])){
     $userID = $_SESSION['user_id'];
 

@@ -1,4 +1,9 @@
-<?php include 'includeformainpages/header.php'?>
+<?php 
+session_start();
+$_SESSION['user_role'] = 'user';
+
+include 'includeformainpages/header.php'?>
+
 
     <!-- About Us Page -->
     <div class="container my-5">

@@ -1,4 +1,8 @@
-<?php include 'includeformainpages/header.php' ?>
+<?php
+session_start();
+$_SESSION['user_role'] = 'user';
+
+include 'includeformainpages/header.php' ?>
 <?php include 'config/config.php' ?>
 <?php include 'config/reviewsgetting.php' ?>
 
