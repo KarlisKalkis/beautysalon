@@ -38,13 +38,21 @@ if (isset($_GET['Procedure_ID'])) {
 
     // Fetch procedure details and available times based on Procedure_ID
     $sql = "
-    SELECT p.*
+    SELECT p.*, pt.time
     FROM procedures p
-    LEFT JOIN reservation_times rt ON p.Procedure_ID = rt.procedure_id
+    LEFT JOIN procedure_times pt ON p.Procedure_ID = pt.procedure_id
     WHERE p.Procedure_ID = :procedureId
     ";
     $stmtselect = $db->prepare($sql);
     $stmtselect->bindParam(':procedureId', $procedureId, PDO::PARAM_INT);
+
+    if($stmtselect->execute()) {
+        $procedure = $stmtselect->fetch(PDO::FETCH_ASSOC);
+        $stmtselect->execute();
+        $availableTimes = $stmtselect->fetchAll(PDO::FETCH_ASSOC);
+    }else{
+        echo "There were errors fetching data";
+    }
 
     if ($stmtselect->execute()) {
         $procedure = $stmtselect->fetch(PDO::FETCH_ASSOC);
@@ -94,8 +102,17 @@ if (isset($_GET['Procedure_ID'])) {
         <!-- Time Picker for choosing reservation time -->
         <form action="process_reservation.php" method="post">
             <div class="form-group">
-                <label for="reservationTime">Choose Reservation Time:</label>
-                <input type="time" class="form-control" id="reservationTime" name="reservationTime" required>
+                
+                <div class="form-group">
+                <label for="reservationTime">Available times</label>
+                <select class="form-control" id="reservationTime" name="reservationTime" required>
+                    <?php foreach ($availableTimes as $time): ?>
+                        <option value="<?php echo $time['time']; ?>">
+                            <?php echo $time['time']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
             </div>
             <!-- Hidden input for passing information about procedure and passing user_id -->
             <input type="hidden" name="Procedure_ID" value="<?php echo $procedure['Procedure_ID']; ?>">
