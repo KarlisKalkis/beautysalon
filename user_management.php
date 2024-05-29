@@ -62,15 +62,15 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
             </div>
         </div>
     </nav>
+    <?php $sql = "SELECT * FROM users";
+        $stmtselect = $db->prepare($sql);
+    if ($stmtselect->execute()) {
+        $users = $stmtselect->fetchAll();
+    } else {
+        echo 'there were errors saving data';
+} ?>
 
-<body>
-    <div class="container">
-        <h1>Admin page </h1>
-    </div>
-
-    <div class="container">
-        <a href="procedures_adding.php">Procedure control</a>
-        <a href="reviews_control.php">Reviews control</a>
-        <a href="user_management.php">User Management</a>
-
+    <div class="d-flex flex-row">
+        <?php foreach ($users as $users) : ?>
+        <div class="p-2">Flex item 1</div>
     </div>

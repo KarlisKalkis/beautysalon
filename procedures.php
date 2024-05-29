@@ -30,10 +30,17 @@ if ($stmtselect->execute()) {
                 <p class="card-text"><?php echo $procedures['info'] ?></p>
                 <p class="card-text text-danger"><?php echo $procedures['price'] ?> EIRO</p>
                 
-                <!-- Hidden input for inserting procedure id -->
+                
                 <form action="reservation.php" method="get">
                     <input type="hidden" name="Procedure_ID" value="<?php echo $procedures['Procedure_ID']; ?>">
-                    <input type="submit" class="btn btn-primary" value="Reserve"> 
+                    <?php
+                        
+                         if (isset($_SESSION['user_name'])) {
+                            echo '<input type="submit" class="btn btn-primary" value="Reserve">';
+                        }else{
+                            echo '<a class="btn btn-primary" href="login.php">Login to reserve</a>';
+                        }
+                        ?>
                 </form>
             </div>
         </div>
@@ -42,7 +49,6 @@ if ($stmtselect->execute()) {
     </div>
 <?php endforeach ?>
 </div>
-    <!-- Include Bootstrap JS and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

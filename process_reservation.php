@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Begin a transaction
         $db->beginTransaction();
 
-        // Delete the selected time from procedure_times
+        // Delete the selected time from procedure_times table 
         $deleteSQL = "
         DELETE FROM procedure_times 
         WHERE procedure_id = :procedureID AND time = :reservationTime AND date = :reservationDate";
@@ -82,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Commit the transaction
         $db->commit();
 
-        // Reservation successful, you can redirect or display a success message
-        header('Location: reservation_success.php');
+        // reservation succesful
+        header('Location: user_profile.php');
         exit();
     } catch (Exception $e) {
         // Roll back the transaction if something failed
