@@ -11,7 +11,7 @@ if (!isset($_SESSION['worker_name'])) {
     header('location:login_form.php');
 }
 
-// Check if the user is logged in as a worker or admin
+// Check if the user is logged in as a worker 
 if (!isset($_SESSION['worker_name'])) {
     header('location:login.php');
     exit(); 
@@ -31,16 +31,11 @@ function addProcedureTime($procedure_id, $date, $time)
 
     // Sending data to databse
     $stmt = $db->prepare("INSERT INTO procedure_times (procedure_id, date, time) VALUES (?, ?, ?)");
-
-    
     $stmt->bindParam(1, $procedure_id);
     $stmt->bindParam(2, $date);
     $stmt->bindParam(3, $time);
-
-    
     $success = $stmt->execute();
 
-    
     return $success;
 }
 
@@ -119,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="time">Time:</label>
                 <input type="time" class="form-control" id="time" name="time" required>
             </div>
+            <br>
             <button type="submit" class="btn btn-primary">Add Time</button>
         </form>
     </div>

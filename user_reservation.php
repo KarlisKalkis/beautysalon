@@ -17,9 +17,6 @@ if (isset($_SESSION['user_name'])) {
         
         
     }
-
-    
-
     // Fetch user data from the database
     $loggedInUserEmail = $_SESSION['user_name'];
     $select = "SELECT * FROM users WHERE email = '$loggedInUserEmail'";

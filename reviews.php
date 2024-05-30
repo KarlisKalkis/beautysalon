@@ -54,12 +54,14 @@ include 'includeformainpages/header.php' ?>
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo $reviews['reviewer_name'] ?></h5>
                                     <p class="card-text"><?php echo $reviews['review'] ?></p>
+                                    
                                 </div>
                             </div>
                         </div>
 
 
                     </div>
+                    <br>
 
                 <?php endforeach ?>
             </div>
@@ -87,11 +89,10 @@ include 'includeformainpages/header.php' ?>
                             user_review: user_review
                         },
                         success: function(data) {
-                            // Handling success, possibly updating the UI with new review
-                            alert(data); // Display a success message or handle it appropriately
+                            alert("Your review was submitted"); // Display a success message for user
                         },
                         error: function(xhr, status, error) {
-                            // Handling errors, if any
+                            // Handling errors
                             console.error(xhr.responseText);
                             alert('An error occurred while submitting the review.');
                         }

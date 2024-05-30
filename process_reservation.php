@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->commit();
 
         // reservation succesful
-        header('Location: user_profile.php');
+        header('Location: user_reservation.php');
         exit();
     } catch (Exception $e) {
         // Roll back the transaction if something failed

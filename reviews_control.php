@@ -9,18 +9,17 @@ if (!isset($_SESSION['admin_name'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_review'])) {
-    // Retrieve the review ID from the form
+    // Retrieves the review ID from the form
     $reviewID = $_POST['review_id'];
 
-    // Prepare and execute the SQL query to delete the review
+    // Process to delete review
     $deleteReviewQuery = "DELETE FROM reviews WHERE review_id = ?";
     $stmt = $db->prepare($deleteReviewQuery);
     $stmt->execute([$reviewID]);
 
-    // Optionally, you can display a success message or redirect the user
-    // For example, you can redirect the user back to the same page
+    //Forwarding admin to same page where he was
     header('Location: reviews_control.php');
-    exit(); // Always exit after a header redirect
+    exit(); 
 }
 
 // Check if the admin is logged in
@@ -56,7 +55,7 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index.php">Danielas Beauty</a>
+            <a class="navbar-brand" href="admin_page.php">Danielas Beauty Admin page</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

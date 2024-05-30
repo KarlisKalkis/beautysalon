@@ -36,7 +36,7 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="index.php">Danielas Beauty</a>
+            <a class="navbar-brand" href="index.php">Danielas Beauty Admin page</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

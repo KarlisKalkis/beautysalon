@@ -78,34 +78,25 @@ require_once('config/config.php');
           $('#register').click(function(e){
 
             var valid = this.form.checkValidity();
-            
             if(valid){
-
             var email           = $('#email').val();
             var firstname       = $('#firstname').val();
             var lastname        = $('#lastname').val();
             var phonenumber     = $('#phonenumber').val();
             var password        = $('#password').val();
-
-
               e.preventDefault();
-
               $.ajax({
                 type: 'POST',
                 url: 'register_process.php',
                 data: {email: email, firstname: firstname, lastname: lastname, phonenumber: phonenumber, 
                   password: password},
-
-
                 success: function(data){
                 Swal.fire({
                 'title': 'Succesfully saved',
                 'text': data,
                 'icon': 'success'
                 })
-
                 },
-
                 error: function(data){
                   Swal.fire({
                   'title': 'You came to error',

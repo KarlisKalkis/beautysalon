@@ -57,8 +57,6 @@ if (isset($_GET['Procedure_ID'])) {
     if ($stmtselect->execute()) {
         $procedure = $stmtselect->fetch(PDO::FETCH_ASSOC);
 
-        // Now you have the details of the selected procedure in the $procedure variable
-        // You can use this information to display the reservation details or process the reservation
     } else {
         echo 'There were errors fetching procedure data';
     }
@@ -79,7 +77,8 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     $db ->beginTransaction();
 
     //deleting from reservationtimes table
-    $deleteSQL = "DELETE FROM procedure_times where procedure_id = :procedureID AND time = :reservationTime and date = :reservationDate";
+    $deleteSQL = "DELETE FROM procedure_times where procedure_id = :procedureID AND time = :reservationTime 
+    and date = :reservationDate";
     $stmtDelete = $db -> prepare($deleteSQL);
     $stmtDelete->bindParam(':procedure_id', $procedureId, PDO::PARAM_INT);
     $stmtDelete->bindParam(':reservationTime', $reservationTime, PDO::PARAM_STR);
@@ -106,7 +105,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     <div class="col-md-6 pb-2 d-flex ml-4 p-3">
         <!-- Display reservation details based on $procedure variable -->
         <div class="card col-sm-10 ml-4 p-3" style="max-width: 300px;">
-            <!-- Display procedure information -->
+            <!-- Displaying procedure information -->
             <h5 class="card-title"><?php echo $procedure['name']?></h5>
             <p class="card-text"><?php echo $procedure['info'] ?></p>
             <p class="card-text text-danger"><?php echo $procedure['price'] ?> EIRO</p>
@@ -114,11 +113,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
     </div>
 
     <div class="col-md-6 pb-2 d-flex ml-4 p-3">
-        <!-- Display reservation times -->
-
-        <!-- Additional reservation form or details can be added here -->
-
-        <!-- Time Picker for choosing reservation time -->
+        <!-- Choosing time from available times -->
         <form action="process_reservation.php" method="post">
             <div class="form-group">
                 

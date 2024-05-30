@@ -16,13 +16,13 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
 
 // Check if the user has admin privileges
 if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
-    // Redirect to another page or display an error message
+    // Redirect to another page 
     header('location:access_denied.php');
     exit(); // Stop further execution to prevent displaying the admin page content
 }
 
 //using for procedure adding
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['name']) && isset($_POST['info']) && isset($_POST['price']) ) {
     $name = $_POST["name"];
     $info = $_POST["info"];
     $price = $_POST["price"];
@@ -53,23 +53,24 @@ if ($stmtselect->execute()) {
 } ?>
 
 
-<!--Codes for operations with procedure control-->  
+
 
 <!--Deleting procedure-->
-<?php if(isset($_GET['delete_procedure'])){
-    //get procedure id
-    $procedure_id = $_POST['Procedure_ID'];
+<?php 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_procedure'])) {
+    // Retrieves the review ID from the form
+    $Procedure_ID = $_POST['Procedure_ID'];
 
-    //Prepare sql statement to get ready for deletion
-    $sql = "DELETE FROM procedures where Procedure_ID = ? ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$procedure_id]);
+    // Process to delete review
+    $deleteProcedure = "DELETE FROM procedures WHERE Procedure_ID = ?";
+    $stmt = $db->prepare($deleteProcedure);
+    $stmt->execute([$Procedure_ID]);
 
-    header("Location: ".$_SERVER['PHP_SELF']);
-    exit();
+    
+    header('Location: procedures_adding.php');
+    exit(); 
 }
-
-    ?>
+?>
 
 
 <!DOCTYPE html>
@@ -86,7 +87,7 @@ if ($stmtselect->execute()) {
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="index.php">Danielas Beauty</a>
+        <a class="navbar-brand" href="admin_page.php">Danielas Beauty Admin page</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -98,7 +99,7 @@ if ($stmtselect->execute()) {
                     <a class="nav-link" href="procedures_adding.php">Procedures</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="products.php">Products</a>
+                    <a class="nav-link" href="products_adding.php">Products</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="reviews_control.php">Reviews</a>
@@ -125,11 +126,12 @@ if ($stmtselect->execute()) {
             <textarea class="form-control" id="info" name="info" required></textarea>
         </div>
 
-        <div class="form-group">
+        <div class="form-group pt-3">
             <label for="price">Price:</label>
             <input type="number" min="1" step="any" class="form-control" id="price" name="price" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Add Procedure</button>
+        <br>
+        <button type="submit " class="btn btn-primary">Add Procedure</button>
     </form>
 </div>
 

@@ -5,7 +5,7 @@ session_start();
 unset($_SESSION["userLogin"]);
 session_destroy();
 
-// Redirect the user to the login page or any other desired page
+// Redirecting to index page when user loged out
 header("Location: index.php");
 exit();
 ?>

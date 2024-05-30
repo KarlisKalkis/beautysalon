@@ -40,6 +40,8 @@ if (isset($_POST['submit'])) {
         error_log("SQL Error: " . $db->error);
         $error[] = 'Database query error. Please try again later.';
     }
+
+
 }
 ?>
 
