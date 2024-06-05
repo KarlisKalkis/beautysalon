@@ -22,6 +22,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_review'])) {
     exit(); 
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['approve_review'])) {
+    // Retrieves the review ID from the form
+    $reviewID = $_POST['review_id'];
+
+
+
+    // Process to delete review
+    $approveReviewQuerry = "UPDATE reviews SET approved=1 WHERE review_id=?";
+    $stmt = $db->prepare($approveReviewQuerry);
+    $stmt->execute([$reviewID]);
+
+    //Forwarding admin to same page where he was
+    header('Location: reviews_control.php');
+    exit(); 
+}
+
 // Check if the admin is logged in
 if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
     header('location:login.php');
@@ -35,7 +51,13 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
     exit(); // Stop further execution to prevent displaying the admin page content
 }
 
-
+$sql = "SELECT * FROM reviews where approved=0";
+$stmtselect = $db->prepare($sql);
+if ($stmtselect->execute()) {
+    $reviewsToApprove = $stmtselect->fetchAll();
+} else {
+    echo 'there were errors saving data';
+} 
 
 
 ?>
@@ -83,7 +105,28 @@ if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
     </nav>
     
 
+    <div class="container">
+        <h1 class="mt-5 text-center">Reviews needed to check for you</h1>
+        <?php foreach ($reviewsToApprove as $reviewsToApprove) : ?>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Reviewer name: <?php echo $reviewsToApprove['reviewer_name'] ?></h5>
+                            <p class="card-text">Review: <?php echo $reviewsToApprove['review'] ?></p>
+                            <!-- Form to delete the review -->
+                            <form action="" method="POST">
+                                <input type="hidden" name="review_id" value="<?php echo $reviewsToApprove['review_id'] ?>">
+                                <button type="submit" name="delete_review" class="btn btn-danger">Delete</button>
+                                <button type="submit" name="approve_review" class="btn btn-success">Aprove</button>
 
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
     
     <div class="container">
         <h1 class="mt-5 text-center">Customer Reviews</h1>
