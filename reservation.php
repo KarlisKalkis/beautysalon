@@ -42,6 +42,8 @@ if (isset($_GET['Procedure_ID'])) {
     FROM procedures p
     LEFT JOIN procedure_times pt ON p.Procedure_ID = pt.procedure_id
     WHERE p.Procedure_ID = :procedureId
+    and (pt.time > curdate() or pt.time is null)
+    and (pt.date > curdate() or pt.date is null)
     ";
     $stmtselect = $db->prepare($sql);
     $stmtselect->bindParam(':procedureId', $procedureId, PDO::PARAM_INT);
