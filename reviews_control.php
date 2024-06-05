@@ -44,11 +44,10 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
     exit(); // Stop further execution to prevent displaying the admin page content
 }
 
-// Check if the user has admin privileges
+// ADMIN CHECKING
 if (isset($_SESSION['admin_name']) && $_SESSION['user_role'] !== 'admin') {
-    // Redirect to another page or display an error message
     header('location:access_denied.php');
-    exit(); // Stop further execution to prevent displaying the admin page content
+    exit(); 
 }
 
 $sql = "SELECT * FROM reviews where approved=0";
@@ -114,7 +113,7 @@ if ($stmtselect->execute()) {
                         <div class="card-body">
                             <h5 class="card-title">Reviewer name: <?php echo $reviewsToApprove['reviewer_name'] ?></h5>
                             <p class="card-text">Review: <?php echo $reviewsToApprove['review'] ?></p>
-                            <!-- Form to delete the review -->
+                            <!-- Form to approve the review -->
                             <form action="" method="POST">
                                 <input type="hidden" name="review_id" value="<?php echo $reviewsToApprove['review_id'] ?>">
                                 <button type="submit" name="delete_review" class="btn btn-danger">Delete</button>

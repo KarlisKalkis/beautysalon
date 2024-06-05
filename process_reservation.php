@@ -29,19 +29,17 @@ if (isset($_SESSION['user_id'])){
     $stmtCheckUser->execute();
 
     if ($stmtCheckUser->rowCount() == 0) {
-        // User does not exist, handle accordingly (redirect or show an error message)
         echo 'User not found';
         exit();
     }
 } else {
-    // User ID not found in the session, handle accordingly (redirect or show an error message)
     echo 'User ID not found in the session';
     var_dump($_SESSION);
     var_dump($userData);
     exit();
 }
 
-//i
+
 // Validate the form data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reservationTime = $_POST['reservationTime'];
@@ -53,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate and sanitize the inputs if needed
 
     try {
-        // Begin a transaction
+        // Begining of transaction
         $db->beginTransaction();
 
         // Delete the selected time from procedure_times table 

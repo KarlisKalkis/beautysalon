@@ -29,7 +29,7 @@ function addProcedureTime($procedure_id, $date, $time)
 {
     global $db; //database insertion
 
-    // Sending data to databse
+    // Data sending
     $stmt = $db->prepare("INSERT INTO procedure_times (procedure_id, date, time) VALUES (?, ?, ?)");
     $stmt->bindParam(1, $procedure_id);
     $stmt->bindParam(2, $date);

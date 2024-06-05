@@ -63,7 +63,6 @@ if (isset($_GET['Procedure_ID'])) {
         echo 'There were errors fetching procedure data';
     }
 } else {
-    // Redirect to the page where procedure selection is done if Procedure_ID is not provided
     header('Location: procedures.php');
     exit();
 }
@@ -105,9 +104,8 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
 
 <div class="row pt-5 p-4">
     <div class="col-md-6 pb-2 d-flex ml-4 p-3">
-        <!-- Display reservation details based on $procedure variable -->
+        <!-- Reservation details -->
         <div class="card col-sm-10 ml-4 p-3" style="max-width: 300px;">
-            <!-- Displaying procedure information -->
             <h5 class="card-title"><?php echo $procedure['name']?></h5>
             <p class="card-text"><?php echo $procedure['info'] ?></p>
             <p class="card-text text-danger"><?php echo $procedure['price'] ?> EIRO</p>

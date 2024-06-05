@@ -43,7 +43,6 @@ include 'includeformainpages/header.php' ?>
 
         <!-- Existing Reviews -->
         <div class="row mt-4 ">
-            <!-- Display existing reviews here (you can use the same card structure as before) -->
             <div class="container">
                 <h1 class="mt-5 text-center">Customer Reviews</h1>
                 <?php foreach ($reviews as $reviews) : ?>

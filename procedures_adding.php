@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['name']) && isset($_PO
     $info = $_POST["info"];
     $price = $_POST["price"];
 
-    // Perform validation if the procedure doesn't already exist in the database
+    
     $sql_check = "SELECT * FROM procedures WHERE name = :name";
     $result_check = $db->prepare($sql_check);
     $result_check->bindParam(':name', $name);

@@ -27,7 +27,7 @@ if (isset($_SESSION['user_name'])) {
 
     
 
-    // Fetch user data from the database
+    // User data fetching
     $loggedInUserEmail = $_SESSION['user_name'];
     $select = "SELECT * FROM users WHERE email = '$loggedInUserEmail'";
     $result = $db->query($select);
@@ -36,7 +36,7 @@ if (isset($_SESSION['user_name'])) {
         $userData = $result->fetch();
         $userID = $_SESSION['user_id'];
 
-        // Fetch user reservations
+        //sql querry to get reservation info
         $usersReservations = "SELECT 
             p.name,
             o.Date,
@@ -56,7 +56,6 @@ if (isset($_SESSION['user_name'])) {
         echo "User profile data not found.";
     }
 } else {
-    // Redirect the user to the login page if not logged in
     header('Location: login.php');
     exit();
 }
