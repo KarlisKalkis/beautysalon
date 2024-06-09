@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 include 'config/config.php'; 
 
+
 session_start();
 $_SESSION['user_role'] = 'worker';
 
@@ -22,6 +23,30 @@ if ($_SESSION['user_role'] !== 'worker') {
     
     header('location:access_denied.php');
     exit(); 
+}
+
+$sql = "SELECT 
+p.name,
+u.firstname, 
+u.lastname, 
+u.phonenumber, 
+o.Order_ID, 
+o.Date, 
+o.Time, 
+o.price 
+FROM orders o 
+LEFT JOIN users u ON u.user_id = o.user_id
+LEFT JOIN procedures p ON p.Procedure_ID = o.Procedure_ID
+WHERE o.Procedure_ID IS NOT NULL
+AND o.Date >= CURDATE()
+AND (o.Date >= CURDATE() OR o.Date IS NULL)
+AND (o.Time >= CURRENT_TIME() OR o.Time IS NULL);";
+
+$stmtselect = $db->prepare($sql);
+if ($stmtselect->execute()) {
+    $orders = $stmtselect->fetchAll();
+} else {
+    echo 'there were errors saving data';
 }
 ?>
 <!DOCTYPE html>
@@ -64,4 +89,25 @@ if ($_SESSION['user_role'] !== 'worker') {
         </div>
     </div>
 </nav>
+
+<div class="container">
+        <h1 class="mt-5 text-center">Your upcoming procedures</h1>
+        <?php foreach ($orders as $order) : ?>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Procedure name: <?php echo $order['name'] ?></h5>
+                            <p class="card-text">Contact number for client:  <?php echo $order['phonenumber'] ?></p>
+                            <p class="card-text">First name: <?php echo $order['firstname'] ?></p>
+                            <p class="card-text">Last name: <?php echo $order['lastname'] ?></p>
+                            <p class="card-text">Procedure price: <?php echo $order['price'] ?></p>
+                            <p class="card-text">Date: <?php echo $order['Date']?></p>
+                            <p class="card-text">Time: <?php echo $order['Time']?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
 
